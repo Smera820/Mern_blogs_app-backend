@@ -63,9 +63,9 @@ router.get("/", async (req, res) => {
         const searchFilter = {
             title: { $regex: express.query.search, $option: "i" }
         }
-        const posts = await post.find(express.query.search?
-            searchFilter:null)
-            res.status(200).json(posts)
+        const posts = await post.find(express.query.search ?
+            searchFilter : null)
+        res.status(200).json(posts)
     }
     catch (err) {
         res.status(500).json(err)
@@ -75,12 +75,12 @@ router.get("/", async (req, res) => {
 
 
 // get user post
-router.get("/user/:userId", async(req,res)=>{
+router.get("/user/:userId", async (req, res) => {
     try {
-        const posts= await Post.find({userId:req.params.userId})
+        const posts = await Post.find({ userId: req.params.userId })
         res.status(200).json(posts)
 
-    } 
+    }
     catch (err) {
         res.status(500).json(err)
     }
