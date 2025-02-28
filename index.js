@@ -16,8 +16,8 @@ const coommentsRoute = require('./routes/comments')
 
 app.use(cors())
 const corsOptions = {
-    origin: '+',
-    credential: true
+    origin: 'http://localhost:5173',
+    credential: true,
 }
 
 app.use(cors(corsOptions))
@@ -38,6 +38,7 @@ const ConnectDB = async () => {
 // middleware
 dotenv.config()
 app.use(express.json())
+
 
 app.use("/images", express.static(path.join(__dirname, "/images")))
 console.log(cors())

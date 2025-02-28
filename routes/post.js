@@ -48,7 +48,7 @@ router.delete("/:id", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        const post = await Post.findByIdAnd(req.params.id)
+        const post = await post.findByIdAnd(req.params.id)
         res.status(200).json(post)
 
     }
@@ -63,7 +63,7 @@ router.get("/", async (req, res) => {
         const searchFilter = {
             title: { $regex: express.query.search, $option: "i" }
         }
-        const posts = await post.find(express.query.search ?
+        const posts = await posts.find(express.query.search ?
             searchFilter : null)
         res.status(200).json(posts)
     }
@@ -77,7 +77,7 @@ router.get("/", async (req, res) => {
 // get user post
 router.get("/user/:userId", async (req, res) => {
     try {
-        const posts = await Post.find({ userId: req.params.userId })
+        const posts = await posts.find({ userId: req.params.userId })
         res.status(200).json(posts)
 
     }
