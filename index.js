@@ -12,14 +12,11 @@ const postRoute = require('./routes/post')
 const coommentsRoute = require('./routes/comments')
 
 
-
-
 app.use(cors())
 const corsOptions = {
-    origin: 'http://localhost:5173',
-    credential: true,
-}
-
+    origin: 'http://localhost:5174',
+    credentials: true,
+  };
 app.use(cors(corsOptions))
 
 const ConnectDB = async () => {
@@ -39,12 +36,12 @@ const ConnectDB = async () => {
 dotenv.config()
 app.use(express.json())
 
-
 app.use("/images", express.static(path.join(__dirname, "/images")))
 console.log(cors())
 
-
 app.use(cookieParser())
+
+// route handlers
 app.use("/api/auth", authRoute)
 app.use("/api/user", userRoute)
 app.use("/api/post", postRoute)

@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 
 // Register
 router.post("/register", async (req, res) => {
+    
     try {
 
         const { username, email, password } = req.body
@@ -27,18 +28,21 @@ router.post("/register", async (req, res) => {
 
 
 // Login
-router.post("/login", async (res, req) => {
+router.post("/login", async (req, res) => {
+    
     try {
+        console.log(req.body.email,"email");
+        
         const user = await User.findOne({ email: req.body.email })
         if (!user) {
             return res.status(404).json("User not found!")
-
         }
         const match = await bcrypt.compare(req.body.password, user.password)
+
         if (!match) {
             return res.status(401).json("wrong password")
         }
-        const token = jwt.sign({ _id, username: user.username, email: user.email }, process.env.SECRET, { expiresIn: "3d" })
+        const token = jwt.sign({ _id:user._id, username: user.username, email: user.email }, process.env.SECRET, { expiresIn: "3d" })
         const { password, ...info } = user._doc
         res.cookie("token", token, {
             httpOnly: true,
@@ -48,7 +52,9 @@ router.post("/login", async (res, req) => {
         }).status(200).json(info)
 
 
+
     } catch (err) {
+        console.log(err)
         res.status(500).json(err)
     }
 })
@@ -57,7 +63,7 @@ router.post("/login", async (res, req) => {
 router.get("/logout", async (req, res) => {
     try {
 
-        res.clearCookie("token", { sameSite: 'none', secure: true }).status(200).send("user logged out successfully")
+        res.clearCookie("token", { sameSite: 'none', secure: true }).status(200).send("User logged out successfully")
 
     } catch (err) {
         res.status(500).json(err)

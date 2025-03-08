@@ -40,7 +40,7 @@ router.delete("/:id", verifyToken, async (req, res) => {
 })
 
 // Get User
-router.get("/id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
         const { password, ...info } = user._doc

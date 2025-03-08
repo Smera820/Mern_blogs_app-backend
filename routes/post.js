@@ -3,6 +3,7 @@ const router = express.Router()
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const Comment = require('../models/Comments')
+const Post=require('../models/Post')
 const verifyToken = require('../verifyToken')
 
 
@@ -31,10 +32,10 @@ router.put("/:id", verifyToken, async (req, res) => {
 })
 
 // Delete
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken,async (req, res) => {
     try {
         await Post.findByIdAndDelete(req.params.id)
-        await Comment.deleteMany({ PostId: req.params.id })
+        await Comment.deleteMany({ postId: req.params.id })
         res.status(200).json("Post deleted")
 
     }
@@ -48,7 +49,7 @@ router.delete("/:id", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     try {
-        const post = await post.findByIdAnd(req.params.id)
+        const post = await post.findById(req.params.id)
         res.status(200).json(post)
 
     }
@@ -59,12 +60,16 @@ router.get("/:id", async (req, res) => {
 
 // get post
 router.get("/", async (req, res) => {
+    const query = req.query
     try {
         const searchFilter = {
-            title: { $regex: express.query.search, $option: "i" }
+            title: { $regex: query.search, $options: "i" }
         }
-        const posts = await posts.find(express.query.search ?
-            searchFilter : null)
+        console.log(query.search);
+
+        const posts = await Post.find(query.search ? searchFilter : null)
+        console.log(posts);
+
         res.status(200).json(posts)
     }
     catch (err) {
@@ -77,7 +82,7 @@ router.get("/", async (req, res) => {
 // get user post
 router.get("/user/:userId", async (req, res) => {
     try {
-        const posts = await posts.find({ userId: req.params.userId })
+        const posts = await Post.find({ userId: req.params.userId })
         res.status(200).json(posts)
 
     }
@@ -85,8 +90,6 @@ router.get("/user/:userId", async (req, res) => {
         res.status(500).json(err)
     }
 })
-
-
 
 
 module.exports = router

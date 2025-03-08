@@ -3,6 +3,7 @@ const router = express.Router()
 const User = require('../models/User')
 const bcrypt = require('bcrypt')
 const Post = require('../models/Post')
+const Comments=require('../models/Comments')
 const verifyToken = require('../verifyToken')
 
 
@@ -31,7 +32,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 })
 
 // Delete
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken,async (req, res) => {
     try {
         await Comment.findByIdAndDelete(req.params.id)
         res.status(200).json("Comment deleted")
@@ -42,7 +43,7 @@ router.delete("/:id", async (req, res) => {
     }
 })
 
-// Get comment
+// Get post comment
 router.get("/post/:postId", async (req, res) => {
     try {
         const comments = await Comment.find({ PostId: req.params.postId })
