@@ -1,18 +1,23 @@
 const jwt = require('jsonwebtoken')
 
 const verifyToken = (req, res, next) => {
-    const token = req.cookies.token
+    const token = req.headers.authorization?.split(" ")[1]
+    console.log("Raw Authorization header:", token)
+
     if (!token) {
-        return res.status(401).json("you are not authenticated")
+        return res.status(403).json({ message: "you are not authenticated" })
 
     }
-    jwt.verify(token, process.env.SECRET, async (err, data) => {
+
+    jwt.verify(token, process.env.SECRET, (err, user) => {
         if (err) {
-            return res.status(403).json("Token is invalid")
+            return res.status(403).json({ message: "invalid token" })
         }
-        req.userId = data._id
+        req.user = user
+
         next()
     })
+
 }
 
 module.exports = verifyToken

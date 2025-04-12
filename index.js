@@ -9,15 +9,15 @@ const cookieParser = require('cookie-parser')
 const authRoute = require('./routes/auth')
 const userRoute = require('./routes/user')
 const postRoute = require('./routes/post')
-const coommentsRoute = require('./routes/comments')
+const commentRoute = require('./routes/comments')
 
 
-app.use(cors())
 const corsOptions = {
-    origin: 'http://localhost:5174',
+    origin: 'http://localhost:5173',
     credentials: true,
-  };
+};
 app.use(cors(corsOptions))
+
 
 const ConnectDB = async () => {
     try {
@@ -36,7 +36,7 @@ const ConnectDB = async () => {
 dotenv.config()
 app.use(express.json())
 
-app.use("/images", express.static(path.join(__dirname, "/images")))
+app.use("/images", express.static(path.join(__dirname, "images")));
 console.log(cors())
 
 app.use(cookieParser())
@@ -45,22 +45,21 @@ app.use(cookieParser())
 app.use("/api/auth", authRoute)
 app.use("/api/user", userRoute)
 app.use("/api/post", postRoute)
-app.use("/api/comments", coommentsRoute)
-
-
+app.use("/api/comments", commentRoute)
+app.use('/upload', express.static('uploads'))
 
 // upload image
 const storage = multer.diskStorage({
-    destination: (req, filename, fn) => {
-        fn(null, "images")
+    destination: (req, file, cb) => {
+        cb(null, "images")
     },
-    filename: (req, file, fn) => {
-        fn(null, req.body.img)
+    filename: (req, file, cb) => {
+        cb(null, req.body.img)
     }
 })
 const upload = multer({ storage: storage })
-app.post("api/upload", upload.single("file"), (req, res) => {
-    res.status(200).json("Image uploaded successfully")
+app.post("/api/upload", upload.single("file"), (req, res) => {
+    res.status(200).json({ message: "Image uploaded successfully", filename: req.file.filename })
 })
 
 
