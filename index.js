@@ -34,7 +34,7 @@ const ConnectDB = async () => {
 
 // middleware
 dotenv.config()
-app.use(express.json())
+app.use(express.json());
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 console.log(cors())
